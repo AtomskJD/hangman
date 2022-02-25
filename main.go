@@ -28,13 +28,20 @@ func main() {
 	targetWord := getRandomWord()
 
 	targetWord = "Awesome GO Going"
+	guessedLetters := initializeGuessedWords(targetWord)
+	printGameState(targetWord, guessedLetters)
+	// guessedLetters['o'] = true
+	// printGameState(targetWord, guessedLetters)
+
+	fmt.Println(targetWord)
+}
+
+func initializeGuessedWords(targetWord string) map[rune]bool {
 	guessedLetters := map[rune]bool{}
 	guessedLetters[unicode.ToLower(rune(targetWord[0]))] = true
 	guessedLetters[unicode.ToLower(rune(targetWord[len(targetWord)-1]))] = true
 
-	printGameState(targetWord, guessedLetters)
-
-	fmt.Println(targetWord)
+	return guessedLetters
 }
 
 func getRandomWord() string {
