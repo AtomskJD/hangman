@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"time"
 	"unicode"
@@ -27,13 +28,9 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 	targetWord := getRandomWord()
 
-	targetWord = "Awesome GO Going"
 	guessedLetters := initializeGuessedWords(targetWord)
-	printGameState(targetWord, guessedLetters)
-	// guessedLetters['o'] = true
-	// printGameState(targetWord, guessedLetters)
-
-	fmt.Println(targetWord)
+	hangmanState := 0
+	printGameState(targetWord, guessedLetters, hangmanState)
 }
 
 func initializeGuessedWords(targetWord string) map[rune]bool {
@@ -48,17 +45,39 @@ func getRandomWord() string {
 	return dictionary[rand.Intn(len(dictionary))]
 }
 
-func printGameState(targetWord string, guessedLetters map[rune]bool) {
+func printGameState(
+	targetWord string,
+	guessedLetters map[rune]bool,
+	hangmangState int,
+) {
+	fmt.Println(getWordGuessingProgress(targetWord, guessedLetters))
+	fmt.Println()
+	fmt.Println(getDrawing(hangmangState))
+}
+
+func getWordGuessingProgress(
+	targetWord string,
+	guessedLetters map[rune]bool,
+) string {
+	var result string = ""
 	for _, ch := range targetWord {
 		if ch == ' ' {
-			fmt.Print(" ")
+			result += " "
 		} else if guessedLetters[unicode.ToLower(ch)] == true {
-			fmt.Print(string(ch))
+			result += string(ch)
 		} else {
-			fmt.Print("_")
+			result += "_"
 		}
-		fmt.Print(" ")
-
+		result += " "
 	}
-	fmt.Println()
+
+	return result
+}
+
+func getDrawing(hangmanState int) string {
+	data, err := ioutil.ReadFile(fmt.Sprintf("slides/hangman%d", hangmanState))
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
 }
