@@ -1,12 +1,17 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"os"
+	"strings"
 	"time"
 	"unicode"
 )
+
+var inputReader = bufio.NewReader(os.Stdin)
 
 var dictionary = []string{
 	"Zombie",
@@ -30,7 +35,15 @@ func main() {
 
 	guessedLetters := initializeGuessedWords(targetWord)
 	hangmanState := 0
-	printGameState(targetWord, guessedLetters, hangmanState)
+	for {
+		printGameState(targetWord, guessedLetters, hangmanState)
+		input := readInput()
+		if len(input) != 1 {
+			fmt.Println("Err: invalid input. Please use letters only.")
+			continue
+		}
+
+	}
 }
 
 func initializeGuessedWords(targetWord string) map[rune]bool {
@@ -80,4 +93,14 @@ func getDrawing(hangmanState int) string {
 		panic(err)
 	}
 	return string(data)
+}
+
+func readInput() string {
+	fmt.Print("> ")
+	input, err := inputReader.ReadString('\n')
+	if err != nil {
+		panic(err)
+	}
+
+	return strings.TrimSpace(input)
 }
