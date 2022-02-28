@@ -42,6 +42,12 @@ func main() {
 			fmt.Println("Err: invalid input. Please use letters only.")
 			continue
 		}
+		letter := rune(input[0])
+		if isCorrectGuess(targetWord, letter) {
+			guessedLetters[letter] = true
+		} else {
+			hangmanState++
+		}
 
 	}
 }
@@ -103,4 +109,8 @@ func readInput() string {
 	}
 
 	return strings.TrimSpace(input)
+}
+
+func isCorrectGuess(targetWord string, letter rune) bool {
+	return strings.ContainsRune(targetWord, letter)
 }
