@@ -35,7 +35,7 @@ func main() {
 
 	guessedLetters := initializeGuessedWords(targetWord)
 	hangmanState := 0
-	for {
+	for !isGameOver(targetWord, guessedLetters, hangmanState) {
 		printGameState(targetWord, guessedLetters, hangmanState)
 		input := readInput()
 		if len(input) != 1 {
@@ -50,6 +50,15 @@ func main() {
 		}
 
 	}
+
+	fmt.Println("GAME OVER")
+	if isWordGuessed(targetWord, guessedLetters) {
+		fmt.Println("You win!")
+	} else if isHangmanComplete(hangmanState) {
+		fmt.Println("You lose.")
+	} else {
+		panic("invalid state.")
+	}
 }
 
 func initializeGuessedWords(targetWord string) map[rune]bool {
@@ -58,6 +67,26 @@ func initializeGuessedWords(targetWord string) map[rune]bool {
 	guessedLetters[unicode.ToLower(rune(targetWord[len(targetWord)-1]))] = true
 
 	return guessedLetters
+}
+
+func isGameOver(targetWord string,
+	guessedLetters map[rune]bool,
+	hangmanState int) bool {
+	return isWordGuessed(targetWord, guessedLetters) || isHangmanComplete(hangmanState)
+}
+
+func isWordGuessed(targetWord string, guessedLetters map[rune]bool) bool {
+	for _, ch := range targetWord {
+		if !guessedLetters[ch] {
+			return false
+		}
+	}
+
+	return true
+}
+
+func isHangmanComplete(hangmanState int) bool {
+	return hangmanState >= 9
 }
 
 func getRandomWord() string {
