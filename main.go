@@ -49,6 +49,8 @@ func main() {
 			continue
 		}
 		letter := rune(input[0])
+
+		// is letter is already in use
 		if isCorrectGuess(targetWord, letter) {
 			guessedLetters[letter] = true
 		} else {
