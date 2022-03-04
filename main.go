@@ -1,3 +1,9 @@
+// Extra Challenge:
+//  * If a letter has already been used, print "You've already used that letter"
+//  * implement the command 'hint' - show to the user a random unguessed letter
+//    * limit the user to one hint only
+//  * Build the game & distribute it to your friend
+//    * Build a binary for another distro as well - e.g. Windows
 package main
 
 import (
