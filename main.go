@@ -1,5 +1,4 @@
 // Extra Challenge:
-//  * If a letter has already been used, print "You've already used that letter"
 //  * implement the command 'hint' - show to the user a random unguessed letter
 //    * limit the user to one hint only
 //  * Build the game & distribute it to your friend
@@ -51,7 +50,9 @@ func main() {
 		letter := rune(input[0])
 
 		// is letter is already in use
-		if isCorrectGuess(targetWord, letter) {
+		if isLetterGuessed(guessedLetters, letter) {
+			fmt.Println("the letter %s already guessed try another")
+		} else if isCorrectGuess(targetWord, letter) {
 			guessedLetters[letter] = true
 		} else {
 			hangmanState++
@@ -148,7 +149,12 @@ func readInput() string {
 
 	return strings.TrimSpace(input)
 }
-
+func isLetterGuessed(guessedLetters map[rune]bool, letter rune) bool {
+	if guessedLetters[letter] == true {
+		return true
+	}
+	return false
+}
 func isCorrectGuess(targetWord string, letter rune) bool {
 	return strings.ContainsRune(targetWord, letter)
 }
