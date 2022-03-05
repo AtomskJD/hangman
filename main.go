@@ -1,6 +1,4 @@
 // Extra Challenge:
-//  * implement the command 'hint' - show to the user a random unguessed letter
-//    * limit the user to one hint only
 //  * Build the game & distribute it to your friend
 //    * Build a binary for another distro as well - e.g. Windows
 package main
@@ -33,6 +31,7 @@ var dictionary = []string{
 	"Sunday",
 	"Golang Is Awesome going",
 }
+var hintAttempts int = 2
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
@@ -43,15 +42,23 @@ func main() {
 	for !isGameOver(targetWord, guessedLetters, hangmanState) {
 		printGameState(targetWord, guessedLetters, hangmanState)
 		input := readInput()
-		if len(input) != 1 {
+		if input == "hint" {
+			if hintAttempts > 0 {
+				hintAttempts--
+				hintLetter := runHint(targetWord, &guessedLetters)
+				fmt.Printf("your hint is %s, you have %d hint attenpt\n", hintLetter, hintAttempts)
+			} else {
+				fmt.Println("You out of hints!")
+			}
+			continue
+		} else if len(input) != 1 {
 			fmt.Println("Err: invalid input. Please use letters only.")
 			continue
 		}
 		letter := rune(input[0])
 
-		// is letter is already in use
 		if isLetterGuessed(guessedLetters, letter) {
-			fmt.Println("the letter %s already guessed try another")
+			fmt.Printf("the letter %s already guessed try another\n", letter)
 		} else if isCorrectGuess(targetWord, letter) {
 			guessedLetters[letter] = true
 		} else {
@@ -77,6 +84,21 @@ func initializeGuessedWords(targetWord string) map[rune]bool {
 	guessedLetters[unicode.ToLower(rune(targetWord[len(targetWord)-1]))] = true
 
 	return guessedLetters
+}
+
+func runHint(targetWord string, guessedLetters *map[rune]bool) string {
+	runeWord := []rune(targetWord)
+	var otherRunes []rune
+	for _, l := range runeWord {
+		if (*guessedLetters)[unicode.ToLower(l)] != true {
+			otherRunes = append(otherRunes, l)
+		}
+	}
+	hintRune := otherRunes[rand.Intn(len(otherRunes))]
+	(*guessedLetters)[hintRune] = true
+
+	return string(hintRune)
+
 }
 
 func isGameOver(targetWord string,
