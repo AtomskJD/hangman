@@ -1,6 +1,3 @@
-// Extra Challenge:
-//  * Build the game & distribute it to your friend
-//    * Build a binary for another distro as well - e.g. Windows
 package main
 
 import (
@@ -58,7 +55,7 @@ func main() {
 		letter := rune(input[0])
 
 		if isLetterGuessed(guessedLetters, letter) {
-			fmt.Printf("the letter %s already guessed try another\n", letter)
+			fmt.Printf("the letter %s already guessed try another\n", string(letter))
 		} else if isCorrectGuess(targetWord, letter) {
 			guessedLetters[letter] = true
 		} else {
